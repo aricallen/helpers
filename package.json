@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "random helpers used across projects",
   "main": "dist/index.js",
+  "private": false,
   "scripts": {
     "start": "yarn build && node dist/index.js",
     "dev": "tsc -w",
