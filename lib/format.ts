@@ -1,4 +1,4 @@
-import HumanTime from './helpers/human-time';
+import { formatTimeUnits, parseTimeUnits } from './helpers/human-time';
 
 export const capitalize = (input: string): string => {
   const [first, ...rest] = input.split('');
@@ -12,4 +12,6 @@ export const castSatoshi = (number: number): number => +number.toFixed(8);
 
 export const toSatoshi = (number: number): number => +(+number * 0.00000001).toFixed(8);
 
-export const msToHumanTime = (ms: number, min = true): string => HumanTime(ms, min).toString();
+export const msToHumanTime = (ms: number, min = true): string => {
+  return formatTimeUnits(parseTimeUnits(ms), min);
+};

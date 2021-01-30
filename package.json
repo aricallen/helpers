@@ -9,8 +9,9 @@
     "dev": "tsc -w",
     "build": "tsc",
     "build:w": "tsc --watch",
-    "test": "jest",
-    "test:w": "jest --watch"
+    "test": "yarn jest",
+    "jest": "jest",
+    "jest:w": "jest --watch"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",

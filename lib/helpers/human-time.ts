@@ -1,81 +1,82 @@
 import ms from 'ms';
 
-type HumanTimeModel = {
-  [key: string]: {
-    value: number;
-    text: string;
-  };
+enum UnitKey {
+  MS = 'ms',
+  S = 's',
+  M = 'm',
+  H = 'h',
+  D = 'd',
+  W = 'w',
+}
+
+type TimeUnit = {
+  // amount of specific unit
+  value: number;
+  unitKey: UnitKey;
 };
 
-type HumanTime = HumanTimeModel & {
-  toString: () => string;
+type TimeUnitMap = {
+  [key in UnitKey]: TimeUnit;
 };
 
-export const HumanTime = (milliseconds = 0, minimal = false): HumanTime => {
-  const buildText = (key: string, value: number) => {
-    if (minimal) {
-      return `${value}${key}`;
-    }
-    if (value > 1) {
-      return `${value} ${key}s`;
-    }
-    return `${value} ${key}`;
-  };
+const UNIT_CONFIGS = [
+  {
+    unitKey: UnitKey.MS,
+    longForm: 'millisecond',
+    baseMultiplier: 1,
+  },
+  {
+    unitKey: UnitKey.S,
+    longForm: 'second',
+    baseMultiplier: ms('1 second'),
+  },
+  {
+    unitKey: UnitKey.M,
+    longForm: 'minute',
+    baseMultiplier: ms('1 minute'),
+  },
+  {
+    unitKey: UnitKey.H,
+    longForm: 'hour',
+    baseMultiplier: ms('1 hour'),
+  },
+  {
+    unitKey: UnitKey.D,
+    longForm: 'day',
+    baseMultiplier: ms('1 day'),
+  },
+  {
+    unitKey: UnitKey.W,
+    longForm: 'week',
+    baseMultiplier: ms('7 days'),
+  },
+];
 
-  const units = [
-    {
-      key: minimal ? 'ms' : 'milliseconds',
-      baseMultiplier: 1,
-    },
-    {
-      key: minimal ? 's' : 'seconds',
-      baseMultiplier: ms('1 second'),
-    },
-    {
-      key: minimal ? 'm' : 'minutes',
-      baseMultiplier: ms('1 minute'),
-    },
-    {
-      key: minimal ? 'h' : 'hours',
-      baseMultiplier: ms('1 hour'),
-    },
-    {
-      key: minimal ? 'd' : 'days',
-      baseMultiplier: ms('1 day'),
-    },
-    {
-      key: minimal ? 'w' : 'weeks',
-      baseMultiplier: ms('7 days'),
-    },
-  ];
-
-  let remainingMilliseconds = milliseconds;
-  const humanTime = {} as HumanTimeModel;
-  for (let i = units.length - 1; i >= 0; i -= 1) {
-    const unit = units[i];
-    const value = Math.floor(remainingMilliseconds / unit.baseMultiplier);
-    if (remainingMilliseconds > 0) {
-      remainingMilliseconds -= value * unit.baseMultiplier;
-    }
-    humanTime[unit.key] = {
-      value,
-      text: buildText(unit.key, value),
-    };
-  }
-
-  const toString = () => {
-    const keys = Object.keys(humanTime);
-    let str = '';
-    for (let i = 0; i < keys.length; i += 1) {
-      const unit = humanTime[keys[i]];
-      if (unit.value > 0) {
-        str += `${unit.text}, `;
+export const formatTimeUnits = (timeUnitMap: TimeUnitMap, minimal = true): string => {
+  const tokens = Object.values(UnitKey)
+    .reverse()
+    .filter((unitKey) => timeUnitMap[unitKey].value > 0)
+    .map((unitKey) => {
+      const unit = timeUnitMap[unitKey];
+      if (minimal) {
+        return `${unit.value}${unitKey}`;
       }
-    }
-    return str.replace(/,\s$/, ''); // remove last comma/space
-  };
-
-  return Object.assign({}, humanTime, toString);
+      const config = UNIT_CONFIGS.find((u) => u.unitKey === unitKey);
+      return `${unit.value} ${config?.longForm}${unit.value > 1 ? 's' : ''}`;
+    });
+  return tokens.join(', ');
 };
 
-export default HumanTime;
+export const parseTimeUnits = (milliseconds = 0): TimeUnitMap => {
+  const output = [...UNIT_CONFIGS].reverse().reduce(
+    ({ remaining, timeUnitMap }, timeUnit) => {
+      const value = Math.floor(remaining / timeUnit.baseMultiplier);
+      const { unitKey } = timeUnit;
+      timeUnitMap[unitKey] = { unitKey, value: 0 };
+      timeUnitMap[unitKey].value = value;
+      return { timeUnitMap, remaining: remaining - value * timeUnit.baseMultiplier };
+    },
+    { remaining: milliseconds, timeUnitMap: {} as TimeUnitMap }
+  );
+  return output.timeUnitMap;
+};
