@@ -1,10 +1,12 @@
 {
   "name": "@aricallen/helpers",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "random helpers used across projects",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist/**/*"],
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "start": "yarn build && node dist/index.js",
     "dev": "tsc -w",
