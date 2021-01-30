@@ -39,7 +39,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn build"
+      "pre-commit": "pretty-quick",
+      "pre-push": "yarn build"
     }
   },
   "author": "aricallen",
