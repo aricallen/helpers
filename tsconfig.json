@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "lib": ["es2015", "esnext"],
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "./dist",
+    "rootDir": "./lib",
+    "downlevelIteration": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "inlineSourceMap": true
+  },
+  "include": ["lib/**/*"],
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,35 @@
+{
+  "parser":  "@typescript-eslint/parser",
+  "extends":  [
+    "plugin:@typescript-eslint/recommended",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "rules": {
+    "prettier/prettier": [
+      1,
+      {
+        "tabWidth": 2,
+        "printWidth": 100,
+        "singleQuote": true,
+        "trailingComma": "es5"
+      }
+    ],
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/explicit-member-accessibility": 0,
+    "no-console": 0,
+    "no-bitwise": "off",
+    "global-require": "off",
+    "import/extensions": 0,
+    "no-underscore-dangle": 0,
+    "class-methods-use-this": "off",
+    "arrow-body-style": "off",
+    "no-param-reassign": ["error", { "props": false }],
+    "no-await-in-loop": "off",
+    "no-restricted-syntax": "off"
+  }
+}

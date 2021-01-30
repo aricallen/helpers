@@ -1,0 +1,6 @@
+{
+  "testRegex": "/^tests/*.test.ts",
+  "testPathIgnorePatterns": ["/src/", "/node_modules/"],
+  "moduleFileExtensions": ["ts"],
+  "collectCoverage": true
+}
