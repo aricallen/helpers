@@ -4,6 +4,7 @@
   "description": "random helpers used across projects",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": ["dist/**/*"],
   "scripts": {
     "start": "yarn build && node dist/index.js",
     "dev": "tsc -w",
