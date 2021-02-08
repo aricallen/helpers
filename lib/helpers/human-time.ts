@@ -1,12 +1,12 @@
-import ms from 'ms';
+import ms from "ms";
 
 enum UnitKey {
-  MS = 'ms',
-  S = 's',
-  M = 'm',
-  H = 'h',
-  D = 'd',
-  W = 'w',
+  MS = "ms",
+  S = "s",
+  M = "m",
+  H = "h",
+  D = "d",
+  W = "w",
 }
 
 type TimeUnit = {
@@ -22,37 +22,40 @@ type TimeUnitMap = {
 const UNIT_CONFIGS = [
   {
     unitKey: UnitKey.MS,
-    longForm: 'millisecond',
+    longForm: "millisecond",
     baseMultiplier: 1,
   },
   {
     unitKey: UnitKey.S,
-    longForm: 'second',
-    baseMultiplier: ms('1 second'),
+    longForm: "second",
+    baseMultiplier: ms("1 second"),
   },
   {
     unitKey: UnitKey.M,
-    longForm: 'minute',
-    baseMultiplier: ms('1 minute'),
+    longForm: "minute",
+    baseMultiplier: ms("1 minute"),
   },
   {
     unitKey: UnitKey.H,
-    longForm: 'hour',
-    baseMultiplier: ms('1 hour'),
+    longForm: "hour",
+    baseMultiplier: ms("1 hour"),
   },
   {
     unitKey: UnitKey.D,
-    longForm: 'day',
-    baseMultiplier: ms('1 day'),
+    longForm: "day",
+    baseMultiplier: ms("1 day"),
   },
   {
     unitKey: UnitKey.W,
-    longForm: 'week',
-    baseMultiplier: ms('7 days'),
+    longForm: "week",
+    baseMultiplier: ms("7 days"),
   },
 ];
 
-export const formatTimeUnits = (timeUnitMap: TimeUnitMap, minimal = true): string => {
+export const formatTimeUnits = (
+  timeUnitMap: TimeUnitMap,
+  minimal = true
+): string => {
   const tokens = Object.values(UnitKey)
     .reverse()
     .filter((unitKey) => timeUnitMap[unitKey].value > 0)
@@ -62,9 +65,11 @@ export const formatTimeUnits = (timeUnitMap: TimeUnitMap, minimal = true): strin
         return `${unit.value}${unitKey}`;
       }
       const config = UNIT_CONFIGS.find((u) => u.unitKey === unitKey);
-      return `${unit.value} ${config?.longForm}${unit.value > 1 ? 's' : ''}`;
+      return `${unit.value} ${config && config.longForm}${
+        unit.value > 1 ? "s" : ""
+      }`;
     });
-  return tokens.join(', ');
+  return tokens.join(", ");
 };
 
 export const parseTimeUnits = (milliseconds = 0): TimeUnitMap => {
@@ -74,7 +79,10 @@ export const parseTimeUnits = (milliseconds = 0): TimeUnitMap => {
       const { unitKey } = timeUnit;
       timeUnitMap[unitKey] = { unitKey, value: 0 };
       timeUnitMap[unitKey].value = value;
-      return { timeUnitMap, remaining: remaining - value * timeUnit.baseMultiplier };
+      return {
+        timeUnitMap,
+        remaining: remaining - value * timeUnit.baseMultiplier,
+      };
     },
     { remaining: milliseconds, timeUnitMap: {} as TimeUnitMap }
   );
