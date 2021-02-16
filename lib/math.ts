@@ -26,11 +26,13 @@ export const getPercentDiff = (start: number, end: number, digits = 10): number 
 };
 
 export const getDecimalPlaces = (num: number): number => {
-  const parts = num.toString().split('.');
-  if (parts.length > 1) {
-    const afterDecimal = parts[1];
-    const indexOfOne = afterDecimal.indexOf('1') + 1;
-    return indexOfOne;
+  // avoid scientific notation
+  const bigNum = num.toFixed(21);
+  const [, fractional] = bigNum.split('.');
+  if (fractional.length > 1) {
+    const nums = fractional.split('');
+    const indexOfNonZero = nums.findIndex((numStr: string) => +numStr > 0);
+    return indexOfNonZero + 1;
   }
   return 0; // whole number
 };
